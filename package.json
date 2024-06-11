@@ -24,9 +24,14 @@
     "mongoose": "^8.4.1"
   },
   "devDependencies": {
+    "@eslint/js": "^9.4.0",
+    "@types/eslint__js": "^8.42.3",
     "@types/express": "^4.17.21",
     "@types/node": "^20.14.2",
+    "eslint": "^8.57.0",
+    "prettier": "^3.3.2",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^7.13.0"
   }
 }
