@@ -8,11 +8,24 @@ const createRoom = catchAsync(async (req, res) => {
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Room is created succesfully',
+      message: 'Room added successfully',
+      data: result,
+    });
+  });
+
+  const getSingleRoom = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const result = await RoomServices.getSingleRoomFromDB(id);
+  
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Room retrieved successfully',
       data: result,
     });
   });
 
   export const RoomControllers = {
-    createRoom
+    createRoom,
+    getSingleRoom
   }
