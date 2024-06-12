@@ -58,4 +58,5 @@ const createRoomValidationSchema = z.object({
 
 export const RoomValidations = {
   createRoomValidationSchema,
+  
 }

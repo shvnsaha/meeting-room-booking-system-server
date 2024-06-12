@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose'
 import { TRoom } from './room.interface'
 
-const roomSchema = new Schema(
+const roomSchema = new Schema<TRoom>(
   {
     name: {
       type: String,
