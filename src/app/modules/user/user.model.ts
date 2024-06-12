@@ -28,7 +28,14 @@ userSchema.pre('save', async function (next) {
     );
     next();
   });
+
+
+  userSchema.statics.isUserExists = async function (email: string) {
+    return await User.findOne({ email });
+  };
   
-
-
-export const User = model<TUser>('User', userSchema);
+  userSchema.statics.isPasswordMatched = async function (plainPassword,hashedPassword){
+    return await bcrypt.compare(plainPassword, hashedPassword);
+  };
+  
+export const User = model<TUser,UserModel>('User', userSchema);

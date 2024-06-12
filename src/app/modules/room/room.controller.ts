@@ -26,6 +26,7 @@ const getSingleRoom = catchAsync(async (req, res) => {
 })
 
 const getAllRooms = catchAsync(async (req, res) => {
+  console.log(req.user);
   const result = await RoomServices.getAllRoomsFromDB()
 
   sendResponse(res, {

@@ -15,6 +15,6 @@ export type TLogin = {
 }
 
 export interface UserModel extends Model<TUser> {
-    isUserExistsByCustomId(id: string): Promise<TUser>;
+    isUserExists(email: string): Promise<TUser>;
     isPasswordMatched(plainPassword: string, hashedPassword: string,): Promise<boolean>;
 }
