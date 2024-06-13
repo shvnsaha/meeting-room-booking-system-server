@@ -10,6 +10,7 @@ const router = Router();
 
 router
 .post('/',auth('admin','user'),validateRequest(BookingValidations.createBookingValidationSchema),BookingControllers.createBooking)
+.get('/',auth('admin'),BookingControllers.getAllBookings)
 
 
 export const BookingRoutes = router;

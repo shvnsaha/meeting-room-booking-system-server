@@ -80,8 +80,12 @@ const createBookingIntoDB = async (jwtData:JwtPayload,payload: TBooking) => {
     return booking;
  }
 
- 
+ const getAllBookingFromDB = async () => {
+    const result = await Booking.find().populate('slots').populate('room').populate('user','-password')
+    return result
+  }
 
  export const BookingServices = {
-    createBookingIntoDB
+    createBookingIntoDB,
+    getAllBookingFromDB
  }
