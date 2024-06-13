@@ -8,6 +8,7 @@ import { User } from "../modules/user/user.model";
 
 
 
+
 declare global {
   namespace Express {
     interface Request {
@@ -17,7 +18,7 @@ declare global {
 }
 
 
-const auth = () => {
+const auth = (...requiredRoles: string[]) => {
     return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
         const token = req.headers.authorization;
         console.log(token);
@@ -36,11 +37,18 @@ const auth = () => {
 
           console.log(decoded);
         
-    //       const user = await User.isUserExists(email);
+    const user = await User.isUserExists(email);
 
-    // if (!user) {
-    //   throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
-    // }
+    if (!user) {
+      throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
+    }
+
+    if (requiredRoles && !requiredRoles.includes(role)) {
+      throw new AppError(
+        httpStatus.UNAUTHORIZED,
+        'You are not authorized',
+      );
+    }
 
           req.user = decoded as JwtPayload;
       next();

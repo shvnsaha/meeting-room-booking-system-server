@@ -5,7 +5,7 @@ const slotSchema = new Schema<TSlot>({
     room:  {
         type: Schema.Types.ObjectId,
         required: true,
-        ref: 'SemesterRegistration',
+        ref: 'Room',
       },
     date: { type: String, required: true },
     startTime: { type: String, required: true },

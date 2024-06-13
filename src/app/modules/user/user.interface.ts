@@ -9,6 +9,11 @@ export interface TUser {
     role: 'user' | 'admin';
 }
 
+// export type TUserRole = {
+//     admin:'admin',
+//     user:'user'
+// }
+
 export type TLogin = {
     email: string;
     password: string;

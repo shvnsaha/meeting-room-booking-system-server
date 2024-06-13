@@ -5,6 +5,12 @@ import { TSlot } from "./slot.interface"
 import { Slot } from "./slot.model"
 import { minutesToTimeString, parseTimeToMinutes } from "./slot.utils";
 
+// type TQuery = {
+//     room?: string;
+//     date?: string;
+//     isBooked: false
+// }
+
 const createSlotIntoDB = async (payload: TSlot) => {
     const { room, date, startTime, endTime } = payload;
 
@@ -51,6 +57,27 @@ const createSlotIntoDB = async (payload: TSlot) => {
       return result
   }
 
+  const getAllSlotsFromDB = async (query: Record<string, unknown>) => {
+   
+    const { date, roomId } = query;
+
+    let queryObj: any = { isBooked: false };
+
+    if (date) {
+        queryObj.date = date;
+    }
+
+    if (roomId) {
+        queryObj.room = roomId;
+    }
+
+    const result = await Slot.find(queryObj).populate('room');
+
+    return result
+  }
+  
+
   export const SlotServices = {
-    createSlotIntoDB
+    createSlotIntoDB,
+    getAllSlotsFromDB
   }
