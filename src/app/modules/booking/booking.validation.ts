@@ -13,6 +13,13 @@ const createBookingValidationSchema = z.object({
     })
 })
 
+const updateBookingValidationSchema = z.object({
+   body: z.object({
+    isConfirmed:z.enum( ['confirmed', 'unconfirmed', 'canceled'])
+   })
+})
+
 export const BookingValidations = {
-    createBookingValidationSchema
+    createBookingValidationSchema,
+    updateBookingValidationSchema
 }
