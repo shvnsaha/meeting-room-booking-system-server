@@ -12,16 +12,22 @@ const createUserIntoDB = async (payload: TUser) => {
 
  const loginUser = async(payload:TLogin) =>{
     const user = await User.isUserExists(payload?.email);
+    
     if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'There is no user using this email');
    }
 
    if (!(await User.isPasswordMatched(payload?.password, user?.password)))
     throw new AppError(httpStatus.FORBIDDEN, 'Password do not matched');
+
+   const user2:any = user;
+   console.log(user2?._doc?._id);
+   
   
 //    jwtpayload;
 const jwtpayload = {
-    email : user?.email,
+    userId : user2?._doc?._id,
+    email: user?.email,
     role: user?.role
 }
 

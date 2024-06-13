@@ -213,10 +213,17 @@ const deleteBookingFromDB = async (id: string) => {
 
 }
 
+const getMyBookings = async(jwtData:JwtPayload) =>{
+  console.log(jwtData);
+  const result = await Booking.find({user:jwtData?.userId}).populate('slots').populate('room').populate('user','-password')
+  return result
+}
+
 
  export const BookingServices = {
     createBookingIntoDB,
     getAllBookingFromDB,
     updateBookingIntoDB,
-    deleteBookingFromDB
+    deleteBookingFromDB,
+    getMyBookings
  }
