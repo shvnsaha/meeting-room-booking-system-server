@@ -166,11 +166,57 @@ const createBookingIntoDB = async (jwtData:JwtPayload,payload: TBooking) => {
 
 }
 
-const 
+const deleteBookingFromDB = async (id: string) => {
+  const bookingData = await Booking.findById(id);
+  if(!bookingData || bookingData?.isDeleted){
+    throw new AppError(httpStatus.NOT_FOUND,'Booking data not found')
+  }
+
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
+
+    const updateSlotIsBooked = await Slot.updateMany(
+      { _id: { $in: bookingData.slots } },
+      { $set: { isBooked: false } },
+      {
+          new: true,
+          runValidators: true,
+          session,
+        },
+    );
+
+    if (!updateSlotIsBooked) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to update isBooked Property');
+    }
+    
+
+    const result = await Booking.findByIdAndUpdate(id, { isDeleted: true }, {
+      new: true,
+      session,
+    })
+    if (!result) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to update Booking');
+    }
+    await session.commitTransaction();
+    await session.endSession();
+
+    return result
+ 
+
+
+}catch(err){
+  await session.abortTransaction();
+  await session.endSession();
+  throw new AppError(httpStatus.BAD_REQUEST, 'Failed to update course');
+}
+
+}
 
 
  export const BookingServices = {
     createBookingIntoDB,
     getAllBookingFromDB,
-    updateBookingIntoDB 
+    updateBookingIntoDB,
+    deleteBookingFromDB
  }
