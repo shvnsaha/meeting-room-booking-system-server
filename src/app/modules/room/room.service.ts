@@ -1,3 +1,5 @@
+import httpStatus from 'http-status'
+import AppError from '../../errors/AppError'
 import { TRoom } from './room.interface'
 import { Room } from './room.model'
 
@@ -27,9 +29,27 @@ const deleteRoomFromDB = async (id: string) => {
   return result
 }
 
+const updateRoomIntoDB = async(id: string, payload: Partial<TRoom>) =>{
+  const room = await Room.findById(id);
+  if(!room || room?.isDeleted){
+    throw new AppError(httpStatus.NOT_FOUND,'Room not found')
+  }
+  const result = await Room.findByIdAndUpdate(
+    id,
+    payload,
+    {
+      new: true,
+      runValidators:true
+    },
+  )
+  return result
+
+}
+
 export const RoomServices = {
   createRoomIntoDB,
   getSingleRoomFromDB,
   getAllRoomsFromDB,
   deleteRoomFromDB,
+  updateRoomIntoDB
 }
