@@ -2,17 +2,17 @@
 import { TErrorSources, TGenericErrorResponse } from '../interface/error'
 
 const handleDuplicateError = (err: any): TGenericErrorResponse => {
-  const arrayError = err.message.split(' ')
-  let index = arrayError.indexOf('dup')
-  const match = arrayError[index - 1]
+  // const arrayError = err.message.split(' ')
+  // let index = arrayError.indexOf('dup')
+  // const match = arrayError[index - 1]
 
-  // The extracted value will be in the first capturing group
-  const extractedMessage = match.slice(0, -2)
+  // // The extracted value will be in the first capturing group
+  // const extractedMessage = match.slice(0, -2)
 
-  const errorSources: TErrorSources = [
+  const errorMessages: TErrorSources = [
     {
       path: '',
-      message: `${extractedMessage} is already exists`,
+      message: err.message,
     },
   ]
 
@@ -20,8 +20,8 @@ const handleDuplicateError = (err: any): TGenericErrorResponse => {
 
   return {
     statusCode,
-    message: 'Invalid ID',
-    errorSources,
+    message: err.message,
+    errorMessages,
   }
 }
 

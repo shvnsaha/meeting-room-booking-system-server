@@ -25,7 +25,7 @@ const auth = (...requiredRoles: string[]) => {
         console.log(token);
 
         if (!token) {
-            throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
+            throw new AppError(httpStatus.UNAUTHORIZED, 'You have no access to this route');
           }
       
           // checking if the given token is valid
@@ -47,7 +47,7 @@ const auth = (...requiredRoles: string[]) => {
     if (requiredRoles && !requiredRoles.includes(role)) {
       throw new AppError(
         httpStatus.UNAUTHORIZED,
-        'You are not authorized',
+        'You have no access to this route',
       );
     }
 
