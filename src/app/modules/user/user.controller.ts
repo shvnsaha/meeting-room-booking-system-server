@@ -1,7 +1,7 @@
-import httpStatus from "http-status"
-import catchAsync from "../../utils/catchAsync"
-import sendResponse from "../../utils/sendResponse"
-import { UserServices } from "./user.service"
+import httpStatus from 'http-status'
+import catchAsync from '../../utils/catchAsync'
+import sendResponse from '../../utils/sendResponse'
+import { UserServices } from './user.service'
 
 const createUser = catchAsync(async (req, res) => {
   const user = await UserServices.createUserIntoDB(req.body)
@@ -15,7 +15,7 @@ const createUser = catchAsync(async (req, res) => {
       email: user.email,
       phone: user.phone,
       role: user.role,
-      address: user.address
+      address: user.address,
     },
   })
 })
@@ -25,7 +25,7 @@ const loginUser = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).json({
     success: true,
     statusCode: httpStatus.OK,
-    message: "User logged in successfully",
+    message: 'User logged in successfully',
     token: accessToken,
     data: {
       _id: user._id,
@@ -33,15 +33,12 @@ const loginUser = catchAsync(async (req, res) => {
       email: user.email,
       phone: user.phone,
       role: user.role,
-      address: user.address
-    }
+      address: user.address,
+    },
   })
-
 })
-
-
 
 export const UserControllers = {
   createUser,
-  loginUser
+  loginUser,
 }

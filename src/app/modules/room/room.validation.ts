@@ -56,7 +56,6 @@ const createRoomValidationSchema = z.object({
   }),
 })
 
-
 const updateRoomValidationSchema = z.object({
   body: z.object({
     name: z
@@ -64,7 +63,8 @@ const updateRoomValidationSchema = z.object({
         required_error: 'Name is required',
         invalid_type_error: 'Name must be a string',
       })
-      .min(1, 'Name must not be empty').optional(),
+      .min(1, 'Name must not be empty')
+      .optional(),
 
     roomNo: z
       .number({
@@ -72,7 +72,8 @@ const updateRoomValidationSchema = z.object({
         invalid_type_error: 'Room number must be a number',
       })
       .int()
-      .nonnegative('Room number must be a non-negative integer').optional(),
+      .nonnegative('Room number must be a non-negative integer')
+      .optional(),
 
     floorNo: z
       .number({
@@ -80,7 +81,8 @@ const updateRoomValidationSchema = z.object({
         invalid_type_error: 'Floor number must be a number',
       })
       .int()
-      .nonnegative('Floor number must be a non-negative integer').optional(),
+      .nonnegative('Floor number must be a non-negative integer')
+      .optional(),
 
     capacity: z
       .number({
@@ -88,14 +90,16 @@ const updateRoomValidationSchema = z.object({
         invalid_type_error: 'Capacity must be a number',
       })
       .int()
-      .nonnegative('Capacity must be a non-negative integer').optional(),
+      .nonnegative('Capacity must be a non-negative integer')
+      .optional(),
 
     pricePerSlot: z
       .number({
         required_error: 'Price per slot is required',
         invalid_type_error: 'Price per slot must be a number',
       })
-      .positive('Price per slot must be a positive number').optional(),
+      .positive('Price per slot must be a positive number')
+      .optional(),
 
     amenities: z
       .array(
@@ -104,7 +108,8 @@ const updateRoomValidationSchema = z.object({
           invalid_type_error: 'Amenities must be an array of strings',
         }),
       )
-      .min(1, 'There must be at least one amenity').optional(),
+      .min(1, 'There must be at least one amenity')
+      .optional(),
 
     // isDeleted: z.boolean({
     //     required_error: "isDeleted is required",
@@ -115,6 +120,5 @@ const updateRoomValidationSchema = z.object({
 
 export const RoomValidations = {
   createRoomValidationSchema,
-  updateRoomValidationSchema
-  
+  updateRoomValidationSchema,
 }
