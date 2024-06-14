@@ -15,24 +15,39 @@ const createSlotIntoDB = async (payload: TSlot) => {
     const { room, date, startTime, endTime } = payload;
 
     const roomExists = await Room.findById(payload?.room);
-    if(!roomExists){
+    if(!roomExists || roomExists.isDeleted){
         throw new AppError(httpStatus.NOT_FOUND, 'Room Not found');
     }
 
-    else if(roomExists?.isDeleted === true){
-        throw new AppError(httpStatus.NOT_FOUND, 'Room Not found');
-    }
+    
+ 
 
     const startMinutes = parseTimeToMinutes(startTime);
     const endMinutes = parseTimeToMinutes(endTime);
+    if(endMinutes<startMinutes){
+        throw new AppError(httpStatus.BAD_REQUEST,'Endtime should be greater than start time')
+    }
 
-    console.log(startMinutes,endMinutes);
+       // logic:
+       const slotData = await Slot.find({room:room,date:date})
+       slotData.forEach((slot)=>{
+        const slotStart = parseTimeToMinutes(slot?.startTime)
+        const slotEnd = parseTimeToMinutes(slot?.endTime)
+        console.log(slotStart,slotEnd);
+        if(startMinutes>=slotStart && startMinutes<slotEnd){
+            throw new AppError(httpStatus.BAD_REQUEST,'Already a Slot in this time period')
+        }
+       })
+
+
+   
 
       // Define the slot duration
       const slotDuration = 60; // 60 minutes per slot
 
       // Calculate the total duration
       const totalDuration = endMinutes - startMinutes;
+
   
       // Calculate the number of slots
       const numberOfSlots = totalDuration / slotDuration;

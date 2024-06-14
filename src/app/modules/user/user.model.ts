@@ -18,6 +18,8 @@ const userSchema = new Schema<TUser,UserModel>({
         },
         required: true
     }
+},{
+  timestamps:true
 });
 
 userSchema.pre('save', async function (next) {

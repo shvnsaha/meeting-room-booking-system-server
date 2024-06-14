@@ -8,13 +8,13 @@ const router = Router()
 
 router
   .post(
-    '/',
+    '/',auth('admin'),
     validateRequest(RoomValidations.createRoomValidationSchema),
     RoomControllers.createRoom,
   )
   .get('/:id', RoomControllers.getSingleRoom)
-  .get('/',auth(), RoomControllers.getAllRooms)
-  .delete('/:id', RoomControllers.deleteRoom)
-  .put('/:id',validateRequest(RoomValidations.updateRoomValidationSchema),RoomControllers.updateRoom)
+  .get('/', RoomControllers.getAllRooms)
+  .delete('/:id',auth('admin'), RoomControllers.deleteRoom)
+  .put('/:id',auth('admin'),validateRequest(RoomValidations.updateRoomValidationSchema),RoomControllers.updateRoom)
 
 export const RoomRoutes = router

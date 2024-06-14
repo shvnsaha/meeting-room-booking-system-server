@@ -8,17 +8,18 @@ const createBooking = catchAsync(async (req, res) => {
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Room added successfully',
+      message: 'Booking created successfully',
       data: result,
     })
   })
 
   const getAllBookings = catchAsync(async (req, res) => {
     const result = await BookingServices.getAllBookingFromDB()
+    const bookingArr = result.length
     sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: 'All bookings retrieved successfully',
+      statusCode: bookingArr? httpStatus.OK: httpStatus.NOT_FOUND,
+      success: bookingArr? true:false,
+      message: bookingArr? 'All bookings retrieved successfully' : 'No Data Found',
       data: result,
     })
   })
@@ -49,11 +50,11 @@ const createBooking = catchAsync(async (req, res) => {
   const myBookings = catchAsync(async (req, res) => {
 
     const result = await BookingServices.getMyBookings(req.user)
-  
+    const myBookingArr = result.length
     sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: 'Booking deleted successfully',
+      statusCode: myBookingArr ? httpStatus.OK : httpStatus.NOT_FOUND,
+      success: myBookingArr ? true: false,
+      message: myBookingArr ? 'User bookings retrieved successfully' : 'No Data Found',
       data: result,
     })
   })

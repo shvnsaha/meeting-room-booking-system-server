@@ -10,7 +10,7 @@ const createUserValidationSchema = z.object({
         email: z.string({
             required_error: "Email is required",
             invalid_type_error: "Email must be a string",
-        }).min(5, "Email must be at least 5 characters long").max(100, "Email cannot exceed 100 characters"),
+        }).email().min(5, "Email must be at least 5 characters long").max(100, "Email cannot exceed 100 characters"),
 
         password: z.string({
             required_error: "Password is required",

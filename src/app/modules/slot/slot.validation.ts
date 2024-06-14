@@ -10,14 +10,14 @@ const timeStringSchema = z.string().refine(
     },
   );
 
+  const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+
 const createSlotValidationSchema = z.object({
     body: z.object({
         room: z.string({
             required_error: 'Room is required',
           }),
-          date: z.string({
-            required_error:'Name is required'
-          }),
+          date: z.string().regex(dateRegex, "Invalid date format. Expected YYYY-MM-DD"),
           startTime: timeStringSchema,
           endTime: timeStringSchema,
           isBooked: z.boolean().default(false).optional()

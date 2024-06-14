@@ -36,7 +36,6 @@ const auth = (...requiredRoles: string[]) => {
 
           const {email,role } = decoded
 
-          console.log(decoded);
         
     const user = await User.isUserExists(email);
 

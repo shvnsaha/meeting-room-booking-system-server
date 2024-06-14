@@ -9,7 +9,7 @@ import { BookingControllers } from "./booking.controller";
 const router = Router();
 
 router
-.post('/',auth('admin','user'),validateRequest(BookingValidations.createBookingValidationSchema),BookingControllers.createBooking)
+.post('/',auth('user'),validateRequest(BookingValidations.createBookingValidationSchema),BookingControllers.createBooking)
 .get('/',auth('admin'),BookingControllers.getAllBookings)
 .put('/:id',auth('admin'),validateRequest(BookingValidations.updateBookingValidationSchema),BookingControllers.updateBooking)
 .delete('/:id',auth('admin'),BookingControllers.deleteBooking)

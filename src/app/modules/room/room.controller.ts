@@ -26,13 +26,12 @@ const getSingleRoom = catchAsync(async (req, res) => {
 })
 
 const getAllRooms = catchAsync(async (req, res) => {
-  console.log(req.user);
   const result = await RoomServices.getAllRoomsFromDB()
-
+  const roomArr = result.length;
   sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Rooms retrieved successfully',
+    statusCode: roomArr ? httpStatus.OK : httpStatus.NOT_FOUND,
+    success: roomArr ? true : false,
+    message: roomArr ? 'Rooms retrieved successfully' : "No Data Found",
     data: result,
   })
 })
