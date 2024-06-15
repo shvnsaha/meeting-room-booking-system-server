@@ -4,6 +4,7 @@ import { Room } from '../room/room.model'
 import { TSlot } from './slot.interface'
 import { Slot } from './slot.model'
 import { minutesToTimeString, parseTimeToMinutes } from './slot.utils'
+import { populate } from 'dotenv'
 
 // type TQuery = {
 //     room?: string;
@@ -72,7 +73,6 @@ const createSlotIntoDB = async (payload: TSlot) => {
 
 const getAllSlotsFromDB = async (query: Record<string, unknown>) => {
   const { date, roomId } = query
-
   const queryObj: any = { isBooked: false }
 
   if (date) {
@@ -84,7 +84,6 @@ const getAllSlotsFromDB = async (query: Record<string, unknown>) => {
   }
 
   const result = await Slot.find(queryObj).populate('room')
-
   return result
 }
 

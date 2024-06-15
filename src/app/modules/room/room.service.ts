@@ -9,7 +9,7 @@ const createRoomIntoDB = async (payload: TRoom) => {
 }
 
 const getSingleRoomFromDB = async (id: string) => {
-  const result = await Room.findById(id).select('-__v -createdAt -updatedAt')
+  const result = await Room.findById(id)
   if (!result || result.isDeleted) {
     throw new AppError(httpStatus.NOT_FOUND, 'Room not found')
   }

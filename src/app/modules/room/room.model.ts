@@ -33,9 +33,10 @@ const roomSchema = new Schema<TRoom>(
       default: false,
     },
   },
-  {
-    timestamps: true,
-  },
+  { versionKey: false },
+  // {
+  //   timestamps: true,
+  // },
 )
 
 export const Room = model<TRoom>('Room', roomSchema)
