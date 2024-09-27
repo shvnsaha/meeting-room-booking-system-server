@@ -35,12 +35,20 @@ const bookingSchema = new Schema<TBooking>(
       },
       default: 'unconfirmed',
     },
+    isPaid:{
+      type: Boolean,
+      default: false
+    },
+    tranId:{
+      type: String,
+      required: true
+    },
     isDeleted: {
       type: Boolean,
       default: false,
     },
   },
-  { versionKey: false },
+  { versionKey: false,timestamps: true },
   // {
   //   timestamps: true,
   // },

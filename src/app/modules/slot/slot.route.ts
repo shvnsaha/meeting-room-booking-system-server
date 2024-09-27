@@ -13,6 +13,14 @@ router
     validateRequest(SlotValidations.createSlotValidationSchema),
     SlotControllers.createSlot,
   )
-  .get('/availability', SlotControllers.getAllSlots)
+  .delete('/:id', auth('admin'), SlotControllers.deleteSlot)
+  .get('/availability', SlotControllers.getAllAvailableSlots)
+  .get('/',SlotControllers.getAllSlots)
+
+  .put(
+    '/:id',
+    auth('admin'),
+    SlotControllers.updateSlot,
+  )
 
 export const SlotRoutes = router

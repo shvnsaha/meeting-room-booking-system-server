@@ -7,5 +7,7 @@ export type TBooking = {
   user: Types.ObjectId
   totalAmount: number
   isConfirmed: 'confirmed' | 'unconfirmed' | 'canceled'
+  tranId?:string
+  isPaid?:boolean
   isDeleted?: boolean
 }

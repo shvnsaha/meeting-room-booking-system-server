@@ -9,6 +9,13 @@ const createRoomValidationSchema = z.object({
       })
       .min(1, 'Name must not be empty'),
 
+    image: z
+      .string({
+        required_error: 'Name is required',
+        invalid_type_error: 'Name must be a string',
+      })
+      .min(1, 'Name must not be empty'),
+
     roomNo: z
       .number({
         required_error: 'Room number is required',
@@ -59,6 +66,13 @@ const createRoomValidationSchema = z.object({
 const updateRoomValidationSchema = z.object({
   body: z.object({
     name: z
+      .string({
+        required_error: 'Name is required',
+        invalid_type_error: 'Name must be a string',
+      })
+      .min(1, 'Name must not be empty')
+      .optional(),
+    image: z
       .string({
         required_error: 'Name is required',
         invalid_type_error: 'Name must be a string',

@@ -9,7 +9,7 @@ const router = Router()
 router
   .post(
     '/',
-    auth('admin'),
+    auth('admin','user'),
     validateRequest(RoomValidations.createRoomValidationSchema),
     RoomControllers.createRoom,
   )

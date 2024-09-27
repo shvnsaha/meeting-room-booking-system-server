@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { JwtPayload } from 'jsonwebtoken'
 import { TBooking } from './booking.interface'
 import { User } from '../user/user.model'
@@ -7,6 +8,8 @@ import { Room } from '../room/room.model'
 import mongoose, { Types } from 'mongoose'
 import { Slot } from '../slot/slot.model'
 import { Booking } from './booking.model'
+import { initiatePayment } from '../payment/payment.utils'
+
 
 const createBookingIntoDB = async (jwtData: JwtPayload, payload: TBooking) => {
   const { date, slots, room, user } = payload
@@ -42,6 +45,7 @@ const createBookingIntoDB = async (jwtData: JwtPayload, payload: TBooking) => {
   await slotAvailabily(slots, room, date)
 
   const totalAmount = roomData?.pricePerSlot * slots.length
+  const tranId = new mongoose.Types.ObjectId().toString()
   const booking = new Booking({
     date,
     slots,
@@ -49,50 +53,72 @@ const createBookingIntoDB = async (jwtData: JwtPayload, payload: TBooking) => {
     user,
     totalAmount,
     isConfirmed: 'unconfirmed',
+    isPaid: false,
+    tranId,
     isDeleted: false,
   })
 
-  // // transaction
-  const session = await mongoose.startSession()
-  try {
-    session.startTransaction()
-    const updateSlotIsBooked = await Slot.updateMany(
-      { _id: { $in: slots } },
-      { $set: { isBooked: true } },
-      {
-        new: true,
-        runValidators: true,
-        session,
-      },
-    )
+  await booking.save();
 
-    if (!updateSlotIsBooked) {
-      throw new AppError(
-        httpStatus.BAD_REQUEST,
-        'Failed to update isBooked Property',
-      )
-    }
+  // payment:
 
-    await booking.save({ session })
-    if (!booking) {
-      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to add Booking')
-    }
-    await booking.populate('slots')
-    await booking.populate('room')
-    await booking.populate('user', { password: 0 })
-    await session.commitTransaction()
-    await session.endSession()
-  } catch (err) {
-    await session.abortTransaction()
-    await session.endSession()
-    throw new AppError(httpStatus.BAD_REQUEST, 'Failed to add booking')
+  const paymentData = {
+    tranId,
+    totalAmount,
+    custormerName: userData.name,
+    customerEmail: userData.email,
+    customerPhone: userData.phone,
+    customerAddress: userData.address,
+    slots: slots
   }
 
-  return booking
+  //payment
+  const paymentSession = await initiatePayment(paymentData);
+  return paymentSession;
+
+
+
+  // // transaction
+  // const session = await mongoose.startSession()
+  // try {
+  //   session.startTransaction()
+  //   const updateSlotIsBooked = await Slot.updateMany(
+  //     { _id: { $in: slots } },
+  //     { $set: { isBooked: true } },
+  //     {
+  //       new: true,
+  //       runValidators: true,
+  //       session,
+  //     },
+  //   )
+
+  //   if (!updateSlotIsBooked) {
+  //     throw new AppError(
+  //       httpStatus.BAD_REQUEST,
+  //       'Failed to update isBooked Property',
+  //     )
+  //   }
+
+  //   await booking.save({ session })
+  //   if (!booking) {
+  //     throw new AppError(httpStatus.BAD_REQUEST, 'Failed to add Booking')
+  //   }
+  //   await booking.populate('slots')
+  //   await booking.populate('room')
+  //   await booking.populate('user', { password: 0 })
+  //   await session.commitTransaction()
+  //   await session.endSession()
+  // } catch (err) {
+  //   await session.abortTransaction()
+  //   await session.endSession()
+  //   throw new AppError(httpStatus.BAD_REQUEST, 'Failed to add booking')
+  // }
+
+  // return booking
 }
 
 const getAllBookingFromDB = async () => {
-  const result = await Booking.find({ isDeleted: false })
+  const result = await Booking.find({ isDeleted: false ,isPaid: true})
     .populate('slots')
     .populate('room')
     .populate('user', '-password')
@@ -157,7 +183,7 @@ const updateBookingIntoDB = async (id: string, payload: Partial<TBooking>) => {
         )
       }
 
-      const result = await Booking.findByIdAndUpdate(id, payload, {
+      const result = await Booking.findByIdAndUpdate(id, {isConfirmed: 'unconfirmed'}, {
         new: true,
         runValidators: true,
         session,
@@ -228,7 +254,7 @@ const deleteBookingFromDB = async (id: string) => {
 }
 
 const getMyBookings = async (jwtData: JwtPayload) => {
-  const result = await Booking.find({ user: jwtData?.userId, isDeleted: false })
+  const result = await Booking.find({ user: jwtData?.userId, isDeleted: false ,isPaid: true})
     .populate('slots')
     .populate('room')
     .populate('user', '-password')

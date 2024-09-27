@@ -9,7 +9,7 @@ const router = Router()
 router
   .post(
     '/',
-    auth('user'),
+    auth('user','admin'),
     validateRequest(BookingValidations.createBookingValidationSchema),
     BookingControllers.createBooking,
   )

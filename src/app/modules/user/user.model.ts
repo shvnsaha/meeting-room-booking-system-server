@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose'
+import  { Schema, model } from 'mongoose'
 import { TUser, UserModel } from './user.interface'
 import config from '../../config'
 import bcrypt from 'bcrypt'
@@ -19,10 +19,10 @@ const userSchema = new Schema<TUser, UserModel>(
       required: true,
     },
   },
-  { versionKey: false },
-  // {
-  //   timestamps: true,
-  // },
+  { versionKey: false,
+    timestamps:true
+   },
+
 )
 
 userSchema.pre('save', async function (next) {

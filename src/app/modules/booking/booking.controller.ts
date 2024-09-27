@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import httpStatus from 'http-status'
 import catchAsync from '../../utils/catchAsync'
 import sendResponse from '../../utils/sendResponse'
 import { BookingServices } from './booking.service'
+import config from '../../config'
+const SSLCommerzPayment = require('sslcommerz-lts')
 
 const createBooking = catchAsync(async (req, res) => {
   const result = await BookingServices.createBookingIntoDB(req.user, req.body)
@@ -50,14 +53,12 @@ const deleteBooking = catchAsync(async (req, res) => {
 })
 
 const myBookings = catchAsync(async (req, res) => {
+  console.log(req.user);
   const result = await BookingServices.getMyBookings(req.user)
-  const myBookingArr = result.length
   sendResponse(res, {
-    statusCode: myBookingArr ? httpStatus.OK : httpStatus.NOT_FOUND,
-    success: myBookingArr ? true : false,
-    message: myBookingArr
-      ? 'User bookings retrieved successfully'
-      : 'No Data Found',
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User bookings retrieved successfully',
     data: result,
   })
 })

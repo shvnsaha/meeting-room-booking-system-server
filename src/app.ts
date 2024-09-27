@@ -10,7 +10,7 @@ const app: Application = express()
 //parsers
 app.use(express.json())
 app.use(cookieParser())
-app.use(cors({ origin: ['http://localhost:5173'] }))
+app.use(cors({ origin: ['http://localhost:5173','https://meeting-room-booking-system-client-steel.vercel.app'] ,credentials:true}))
 
 app.get('/', (req, res) => {
   res.send('Welcome to meeting room booking system server')

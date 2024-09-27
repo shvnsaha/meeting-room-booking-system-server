@@ -7,6 +7,10 @@ const roomSchema = new Schema<TRoom>(
       type: String,
       required: true,
     },
+    image:{
+      type: String,
+      required: true
+    },
     roomNo: {
       type: Number,
       unique: true,
@@ -33,7 +37,7 @@ const roomSchema = new Schema<TRoom>(
       default: false,
     },
   },
-  { versionKey: false },
+  { versionKey: false,timestamps: true },
   // {
   //   timestamps: true,
   // },

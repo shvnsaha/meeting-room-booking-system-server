@@ -12,8 +12,12 @@ const slotSchema = new Schema<TSlot>(
     startTime: { type: String, required: true },
     endTime: { type: String, required: true },
     isBooked: { type: Boolean, default: false },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
-  { versionKey: false },
+  { versionKey: false ,timestamps:true},
   // {
   //   timestamps: true,
   // },

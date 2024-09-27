@@ -4,6 +4,6 @@ import { BookingControllers } from './booking.controller'
 
 const router = Router()
 
-router.get('/', auth('user'), BookingControllers.myBookings)
+router.get('/', auth('user','admin'), BookingControllers.myBookings)
 
 export const myBookingRoutes = router

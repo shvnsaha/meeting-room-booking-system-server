@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-namespace */
 import { NextFunction, Request, Response } from 'express'
 import catchAsync from '../utils/catchAsync'
 import AppError from '../errors/AppError'
@@ -10,7 +12,7 @@ declare global {
   namespace Express {
     interface Request {
       user: JwtPayload
-    }
+    } 
   }
 }
 
@@ -18,7 +20,7 @@ const auth = (...requiredRoles: string[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const data: any = req.headers.authorization?.split(' ')
     const token = data[1]
-    console.log(token)
+  
 
     if (!token) {
       throw new AppError(
@@ -35,6 +37,8 @@ const auth = (...requiredRoles: string[]) => {
 
     const { email, role } = decoded
 
+   
+
     const user = await User.isUserExists(email)
 
     if (!user) {
@@ -47,7 +51,6 @@ const auth = (...requiredRoles: string[]) => {
         'You have no access to this route',
       )
     }
-
     req.user = decoded as JwtPayload
     next()
   })

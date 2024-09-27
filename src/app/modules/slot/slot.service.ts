@@ -22,6 +22,8 @@ const createSlotIntoDB = async (payload: TSlot) => {
 
   const startMinutes = parseTimeToMinutes(startTime)
   const endMinutes = parseTimeToMinutes(endTime)
+
+
   if (endMinutes < startMinutes) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
@@ -71,7 +73,12 @@ const createSlotIntoDB = async (payload: TSlot) => {
   return result
 }
 
-const getAllSlotsFromDB = async (query: Record<string, unknown>) => {
+const getAllSlotsFromDB = async() =>{
+  const result = await Slot.find({isDeleted: false}).populate('room')
+  return result
+}
+
+const getAllAvailableSlotsFromDB = async (query: Record<string, unknown>) => {
   const { date, roomId } = query
   const queryObj: any = { isBooked: false }
 
@@ -87,7 +94,57 @@ const getAllSlotsFromDB = async (query: Record<string, unknown>) => {
   return result
 }
 
+const deleteSlotFromDB = async (id: string) => {
+  const slot = await Slot.findById(id)
+  if (!slot || slot?.isDeleted) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Room not found')
+  }
+  const result = await Slot.findByIdAndUpdate(
+    id,
+    { isDeleted: true },
+    {
+      new: true,
+    },
+  )
+  return result
+}
+
+const updateSlotIntoDB = async (id: string, payload: Partial<TSlot>) => {
+  const slot = await Slot.findById(id)
+  if (!slot || slot?.isDeleted) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Slot not found')
+  }
+
+  const { room,  startTime, endTime } = payload
+
+  const roomExists = await Room.findById(room)
+  if (!roomExists || roomExists.isDeleted) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Room Not found')
+  }
+
+  const startMinutes = parseTimeToMinutes(startTime as string)
+  const endMinutes = parseTimeToMinutes(endTime as string)
+
+
+  if (endMinutes < startMinutes) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'Endtime should be greater than start time',
+    )
+  }
+
+
+  const result = await Slot.findByIdAndUpdate(id, payload, {
+    new: true,
+    runValidators: true,
+  })
+  return result
+}
+
 export const SlotServices = {
   createSlotIntoDB,
   getAllSlotsFromDB,
+  getAllAvailableSlotsFromDB,
+  deleteSlotFromDB,
+  updateSlotIntoDB
 }
