@@ -40,7 +40,7 @@ const createUserValidationSchema = z.object({
         required_error: 'Address is required',
         invalid_type_error: 'Email must be a string',
       })
-      .min(10, 'Address must be at least 10 characters long')
+      .min(10, 'Address must be at least 1 characters long')
       .max(100, 'Address cannot exceed 100 characters'),
 
     role: z.enum(['user', 'admin'], {
